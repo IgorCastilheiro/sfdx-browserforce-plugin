@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://github.com/amtrack/sfdx-browserforce-plugin/src/plugins/communities/schema.json",
+  "title": "DevHub Settings",
+  "type": "object",
+  "properties": {
+    "enabled": {
+      "title": "Enable DevHub",
+      "description": "Warning: cannot be disabled once enabled",
+      "type": "boolean"
+    }
+  }
+}

@@ -16,6 +16,9 @@
         "customerPortal": {
           "$ref": "./customer-portal/schema.json"
         },
+        "devHub": {
+          "$ref": "./devhub/schema.json"
+        },
         "homePageLayouts": {
           "$ref": "./home-page-layouts/schema.json"
         },

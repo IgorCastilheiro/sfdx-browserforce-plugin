@@ -7,5 +7,6 @@
 /tmp
 node_modules
 /.sfdx
-
+*.code-workspace
+/config/browserforce-shape-def.json
 .vscode/settings.json
