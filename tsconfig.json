@@ -1,6 +1,12 @@
 {
-  "extends": "./node_modules/@salesforce/dev-config/tsconfig",
   "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2017",
+    "sourceMap": true,
+    "declaration": true,
+    "moduleResolution": "node",
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
     "outDir": "./lib",
     "rootDir": "./src",
     "lib": ["dom", "es2017"]

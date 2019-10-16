@@ -10,3 +10,4 @@ node_modules
 *.code-workspace
 /config/browserforce-shape-def.json
 .vscode/settings.json
+yarn.lock
