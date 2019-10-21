@@ -34,23 +34,21 @@ export default class Communities extends BrowserforcePlugin {
   }
 
   public async apply(config) {
-  
+
     if (config.enabled === false) {
       console.log('[Communities] `enabled` cannot be disabled once enabled');
     } else {
-      const state = await this.retrieve();
-      if (state['enabled']) {
-        console.log('[Communities] once communities enabled you can not change the domain name...');
-      } else {
-        const page = await this.browserforce.openPage(PATHS.BASE, {
-          waitUntil: ['load', 'domcontentloaded', 'networkidle0']
-        });
+      const page = await this.browserforce.openPage(PATHS.BASE, {
+        waitUntil: ['load', 'domcontentloaded', 'networkidle0']
+      });
 
-        const frameOrPage = await this.browserforce.waitForInFrameOrPage(
-          page,
-          SELECTORS.BASE
-        );
-
+      const frameOrPage = await this.browserforce.waitForInFrameOrPage(
+        page,
+        SELECTORS.BASE
+      );
+      
+      const inputEnable = await frameOrPage.$(SELECTORS.ENABLE_CHECKBOX);
+      if (inputEnable) {
         await frameOrPage.click(SELECTORS.ENABLE_CHECKBOX);
         const domainName = (
           config.domainName ||
@@ -69,6 +67,9 @@ export default class Communities extends BrowserforcePlugin {
           page.waitForNavigation(),
           frameOrPage.click(SELECTORS.SAVE_BUTTON)
         ]);
+
+      } else {
+        console.log('[Communities] once communities enabled you can not change the domain name...');
       }
     }
   }
