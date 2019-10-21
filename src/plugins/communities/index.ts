@@ -34,34 +34,42 @@ export default class Communities extends BrowserforcePlugin {
   }
 
   public async apply(config) {
+  
     if (config.enabled === false) {
-      throw new Error('`enabled` cannot be disabled once enabled');
-    }
+      console.log('[Communities] `enabled` cannot be disabled once enabled');
+    } else {
+      const state = await this.retrieve();
+      if (state['enabled']) {
+        console.log('[Communities] once communities enabled you can not change the domain name...');
+      } else {
+        const page = await this.browserforce.openPage(PATHS.BASE, {
+          waitUntil: ['load', 'domcontentloaded', 'networkidle0']
+        });
 
-    const page = await this.browserforce.openPage(PATHS.BASE, {
-      waitUntil: ['load', 'domcontentloaded', 'networkidle0']
-    });
-    const frameOrPage = await this.browserforce.waitForInFrameOrPage(
-      page,
-      SELECTORS.ENABLE_CHECKBOX
-    );
-    await frameOrPage.click(SELECTORS.ENABLE_CHECKBOX);
-    const domainName = (
-      config.domainName ||
-      this.browserforce.getMyDomain() ||
-      `comm-${Math.random()
-        .toString(36)
-        .substr(2)}`
-    ).substring(0, 22);
-    await frameOrPage.waitFor(SELECTORS.DOMAIN_NAME_INPUT_TEXT);
-    await frameOrPage.type(SELECTORS.DOMAIN_NAME_INPUT_TEXT, domainName);
-    page.on('dialog', async dialog => {
-      await dialog.accept();
-    });
-    await frameOrPage.waitFor(SELECTORS.SAVE_BUTTON);
-    await Promise.all([
-      page.waitForNavigation(),
-      frameOrPage.click(SELECTORS.SAVE_BUTTON)
-    ]);
+        const frameOrPage = await this.browserforce.waitForInFrameOrPage(
+          page,
+          SELECTORS.BASE
+        );
+
+        await frameOrPage.click(SELECTORS.ENABLE_CHECKBOX);
+        const domainName = (
+          config.domainName ||
+          this.browserforce.getMyDomain() ||
+          `comm-${Math.random()
+            .toString(36)
+            .substr(2)}`
+        ).substring(0, 22);
+        await frameOrPage.waitFor(SELECTORS.DOMAIN_NAME_INPUT_TEXT);
+        await frameOrPage.type(SELECTORS.DOMAIN_NAME_INPUT_TEXT, domainName);
+        page.on('dialog', async dialog => {
+          await dialog.accept();
+        });
+        await frameOrPage.waitFor(SELECTORS.SAVE_BUTTON);
+        await Promise.all([
+          page.waitForNavigation(),
+          frameOrPage.click(SELECTORS.SAVE_BUTTON)
+        ]);
+      }
+    }
   }
 }
