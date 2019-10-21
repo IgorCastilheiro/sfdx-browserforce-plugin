@@ -4,7 +4,7 @@ const PATHS = {
   BASE: '_ui/networks/setup/NetworkSettingsPage'
 };
 const SELECTORS = {
-  BASE: 'div.pbBody',
+  BASE: 'div.setupcontent',
   ENABLE_CHECKBOX: 'input[id$=":enableNetworkPrefId"]',
   DOMAIN_NAME_INPUT_TEXT: 'input[id$=":inputSubdomain"]',
   SAVE_BUTTON: 'input[id$=":saveId"]'
@@ -46,7 +46,7 @@ export default class Communities extends BrowserforcePlugin {
         page,
         SELECTORS.BASE
       );
-      
+
       const inputEnable = await frameOrPage.$(SELECTORS.ENABLE_CHECKBOX);
       if (inputEnable) {
         await frameOrPage.click(SELECTORS.ENABLE_CHECKBOX);
