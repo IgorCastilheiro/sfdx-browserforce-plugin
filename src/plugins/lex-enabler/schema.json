@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://github.com/IgorCastilheiro/sfdx-browserforce-plugin/src/plugins/lex-enabler/schema.json",
+  "title": "Lightning Experience Enabler Settings",
+  "type": "object",
+  "properties": {
+    "enabled": {
+      "title": "Enable Lightning Experience",
+      "description": "Switch from Classic mode to Lightning Experience and back.",
+      "type": "boolean"
+    }
+  }
+}

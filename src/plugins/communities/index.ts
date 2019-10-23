@@ -1,11 +1,13 @@
 import { BrowserforcePlugin } from '../../plugin';
+import * as fs from 'fs';
 
 const PATHS = {
   BASE: '_ui/networks/setup/NetworkSettingsPage'
 };
 const SELECTORS = {
-  BASE: 'div.setupcontent',
+  BASE: 'div.pbBody',
   ENABLE_CHECKBOX: 'input[id$=":enableNetworkPrefId"]',
+  DOMAIN_NAME: 'span.sampleArea',
   DOMAIN_NAME_INPUT_TEXT: 'input[id$=":inputSubdomain"]',
   SAVE_BUTTON: 'input[id$=":saveId"]'
 };
@@ -30,6 +32,7 @@ export default class Communities extends BrowserforcePlugin {
       // already enabled
       response['enabled'] = true;
     }
+    page.close();
     return response;
   }
 
@@ -69,6 +72,16 @@ export default class Communities extends BrowserforcePlugin {
         ]);
 
       } else {
+        await frameOrPage.waitFor(SELECTORS.DOMAIN_NAME);
+        var domain = await frameOrPage.$eval(
+          SELECTORS.DOMAIN_NAME,
+          (el: HTMLSpanElement) => el.innerHTML
+        );
+        domain = domain.match(/<h4>(.*?)<\/h4>/g)[0].replace('<h4>', '').replace('</h4>', '')
+        fs.writeFile('domain.txt', domain, function (err) {
+          if (err) throw err;
+          console.log('[Communities] domain file is created successfully.');
+        }); 
         console.log('[Communities] once communities enabled you can not change the domain name...');
       }
     }

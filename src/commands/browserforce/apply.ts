@@ -25,7 +25,7 @@ export default class BrowserforceApply extends BrowserforceCommand {
     const logger = await core.Logger.root();
     this.ux.log(
       `Applying plan file ${
-        this.flags.definitionfile
+      this.flags.definitionfile
       } to org ${this.org.getUsername()}`
     );
     for (const setting of this.settings) {

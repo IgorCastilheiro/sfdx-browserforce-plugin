@@ -4,7 +4,7 @@ import * as puppeteer from 'puppeteer';
 import * as querystring from 'querystring';
 import { parse, URL } from 'url';
 
-const POST_LOGIN_PATH = 'setup/forcecomHomepage.apexp';
+const POST_LOGIN_PATH = '/';
 
 const ERROR_DIV_SELECTOR = '#errorTitle';
 const ERROR_DIVS_SELECTOR = 'div.errorMsg';
@@ -25,12 +25,13 @@ export default class Browserforce {
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
       headless: !(process.env.BROWSER_DEBUG === 'true')
     });
-    await this.openPage(
+    const page = await this.openPage(
       `secur/frontdoor.jsp?sid=${
         this.org.getConnection().accessToken
       }&retURL=${encodeURIComponent(POST_LOGIN_PATH)}`,
       { waitUntil: ['load', 'domcontentloaded', 'networkidle0'] }
     );
+    page.close();
     return this;
   }
 

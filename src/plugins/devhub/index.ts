@@ -1,7 +1,7 @@
 import { BrowserforcePlugin } from '../../plugin';
 
 const PATHS = {
-  BASE: 'lightning/setup/DevHub/home'
+  BASE: 'ui/setup/sfdx/SomaSetupPage'
 };
 const SELECTORS = {
   BASE: 'div.setupcontent',
@@ -28,6 +28,7 @@ export default class DevHub extends BrowserforcePlugin {
       // already enabled
       response['enabled'] = true;
     }
+    page.close();
     return response;
   }
 

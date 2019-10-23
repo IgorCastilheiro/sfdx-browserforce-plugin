@@ -22,6 +22,9 @@
         "homePageLayouts": {
           "$ref": "./home-page-layouts/schema.json"
         },
+        "lexEnabler": {
+          "$ref": "./lex-enabler/schema.json"
+        },
         "salesforceToSalesforce": {
           "$ref": "./salesforce-to-salesforce/schema.json"
         },
