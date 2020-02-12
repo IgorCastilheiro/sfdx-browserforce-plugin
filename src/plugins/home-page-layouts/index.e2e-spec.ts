@@ -5,7 +5,7 @@ import HomePageLayouts from '.';
 
 describe(HomePageLayouts.name, () => {
   it('should assign the home page default', function() {
-    this.timeout(1000 * 90);
+    this.timeout(1000 * 60);
     this.slow(1000 * 30);
     const assignHomePageDefaultCmd = child.spawnSync(
       path.resolve('bin', 'run'),
@@ -28,7 +28,7 @@ describe(HomePageLayouts.name, () => {
     );
   });
   it('should assign the org default', function() {
-    this.timeout(1000 * 90);
+    this.timeout(1000 * 60);
     this.slow(1000 * 30);
     const assignOrgDefaultCmd = child.spawnSync(path.resolve('bin', 'run'), [
       'browserforce:apply',

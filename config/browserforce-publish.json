@@ -1,0 +1,11 @@
+{
+  "settings": [
+    {
+      "communities": {
+        "publisher": {
+          "communityNameAndStatus": "{\"communityName\":\"E-Bikes\",\"status\":\"Active\"}"
+        }
+      }
+    }
+  ]
+}

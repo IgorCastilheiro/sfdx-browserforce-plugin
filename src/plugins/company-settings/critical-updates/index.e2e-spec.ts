@@ -22,7 +22,7 @@ describe(CriticalUpdates.name, () => {
     await fsUnlinkPromise(stateFileDeactivation);
   });
   it('should list all activatable critical updates', async function() {
-    this.timeout(1000 * 90);
+    this.timeout(1000 * 60);
     this.slow(1000 * 30);
     const planActivateCmd = child.spawnSync(path.resolve('bin', 'run'), [
       'browserforce:plan',
@@ -56,7 +56,7 @@ describe(CriticalUpdates.name, () => {
     if (!activatableCriticalUpdatesAvailable) {
       this.skip();
     }
-    this.timeout(1000 * 90);
+    this.timeout(1000 * 60);
     this.slow(1000 * 30);
     const activateCmd = child.spawnSync(path.resolve('bin', 'run'), [
       'browserforce:apply',
@@ -70,7 +70,7 @@ describe(CriticalUpdates.name, () => {
     );
   });
   it('should list all deactivatable critical updates', async function() {
-    this.timeout(1000 * 90);
+    this.timeout(1000 * 60);
     this.slow(1000 * 30);
     const planDeactivateCmd = child.spawnSync(path.resolve('bin', 'run'), [
       'browserforce:plan',
@@ -106,7 +106,7 @@ describe(CriticalUpdates.name, () => {
     if (!deactivatableCriticalUpdatesAvailable) {
       this.skip();
     }
-    this.timeout(1000 * 90);
+    this.timeout(1000 * 60);
     this.slow(1000 * 30);
     const deactivateCmd = child.spawnSync(path.resolve('bin', 'run'), [
       'browserforce:apply',

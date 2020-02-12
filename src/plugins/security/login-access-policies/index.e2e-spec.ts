@@ -5,7 +5,7 @@ import LoginAccessPolicies from '.';
 
 describe(LoginAccessPolicies.name, () => {
   it('should enable', function() {
-    this.timeout(1000 * 90);
+    this.timeout(1000 * 60);
     this.slow(1000 * 30);
     const enableCmd = child.spawnSync(path.resolve('bin', 'run'), [
       'browserforce:apply',
@@ -21,7 +21,7 @@ describe(LoginAccessPolicies.name, () => {
     );
   });
   it('should disable', function() {
-    this.timeout(1000 * 90);
+    this.timeout(1000 * 60);
     this.slow(1000 * 30);
     const disableCmd = child.spawnSync(path.resolve('bin', 'run'), [
       'browserforce:apply',

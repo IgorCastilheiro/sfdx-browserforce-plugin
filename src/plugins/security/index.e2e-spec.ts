@@ -8,7 +8,7 @@ describe(`${CertificateAndKeyManagement.name} and ${
   IdentityProvider.name
 }`, () => {
   it('should fail to enable identity provider with non-existing Certificate', function() {
-    this.timeout(1000 * 90);
+    this.timeout(1000 * 60);
     this.slow(1000 * 30);
     const cmd = child.spawnSync(path.resolve('bin', 'run'), [
       'browserforce:apply',
@@ -54,7 +54,7 @@ describe(`${CertificateAndKeyManagement.name} and ${
     );
   });
   it('should disable Identity Provider', function() {
-    this.timeout(1000 * 90);
+    this.timeout(1000 * 60);
     this.slow(1000 * 30);
     const cmd = child.spawnSync(path.resolve('bin', 'run'), [
       'browserforce:apply',
@@ -70,7 +70,7 @@ describe(`${CertificateAndKeyManagement.name} and ${
     );
   });
   it.skip('should not do anything if self-signed certificate is already available', function() {
-    this.timeout(1000 * 90);
+    this.timeout(1000 * 60);
     this.slow(1000 * 30);
     const cmd = child.spawnSync(path.resolve('bin', 'run'), [
       'browserforce:apply',
@@ -90,7 +90,7 @@ describe(`${CertificateAndKeyManagement.name} and ${
     );
   });
   it('should import a cert from a keystore', function() {
-    this.timeout(1000 * 90);
+    this.timeout(1000 * 60);
     this.slow(1000 * 30);
     const cmd = child.spawnSync(path.resolve('bin', 'run'), [
       'browserforce:apply',

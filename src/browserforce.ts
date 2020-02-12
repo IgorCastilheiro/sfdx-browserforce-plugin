@@ -88,7 +88,7 @@ export default class Browserforce {
         await this.resolveDomains();
         const page = await this.browser.newPage();
         page.setDefaultNavigationTimeout(
-          parseInt(process.env.BROWSERFORCE_NAVIGATION_TIMEOUT_MS, 10) || 90000
+          parseInt(process.env.BROWSERFORCE_NAVIGATION_TIMEOUT_MS, 10) || 60000
         );
         await page.setViewport({ width: 1024, height: 768 });
         const url = `${this.getInstanceUrl()}/${urlPath}`;
