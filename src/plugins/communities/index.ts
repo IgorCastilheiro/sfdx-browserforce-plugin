@@ -8,16 +8,17 @@ const PATHS = {
 const SELECTORS = {
   BASE: 'div.pbBody',
   ENABLE_CHECKBOX: 'input[id$=":enableNetworkPrefId"]',
-  DOMAIN_NAME: 'span.sampleArea',
   DOMAIN_NAME_INPUT_TEXT: 'input[id$=":inputSubdomain"]',
+  DOMAIN_NAME: 'span.sampleArea',
   DOMAIN_AVAILABILITY_BUTTON: 'input[id$=":checkAvailability"]',
   DOMAIN_REGISTRATION_ERROR: 'span.errorMsg',
+  DOMAIN_AVAILABLE_MSG: 'span.messageTextStyling',
   SAVE_BUTTON: 'input[id$=":saveId"]'
 };
 
 export default class Communities extends BrowserforcePlugin {
   public async retrieve(definition) {
-    let response = { ...definition };
+    const response = {};
     if (definition.enabled) {
       const page = await this.browserforce.openPage(PATHS.BASE, {
         waitUntil: ['load', 'domcontentloaded', 'networkidle0']
@@ -26,25 +27,24 @@ export default class Communities extends BrowserforcePlugin {
       
       const inputEnable = await frameOrPage.$(SELECTORS.ENABLE_CHECKBOX);
       if (inputEnable) {
-        response.enabled = await frameOrPage.$eval(SELECTORS.ENABLE_CHECKBOX, (el: HTMLInputElement) => el.checked);
+        response['enabled'] = await frameOrPage.$eval(SELECTORS.ENABLE_CHECKBOX, (el: HTMLInputElement) => el.checked);
       } else {
         // already enabled
-        response.enabled = true;
+        response['enabled'] = true;
         await frameOrPage.waitFor(SELECTORS.DOMAIN_NAME);
         var domain = await frameOrPage.$eval(SELECTORS.DOMAIN_NAME, (el: HTMLSpanElement) => el.innerHTML);
         domain = domain.match(/<h4>(.*?)<\/h4>/g)[0].replace('<h4>', '').replace('</h4>', '')
         fs.writeFile('domain.txt', domain, function (err) {
           if (err) throw err;
-          console.log('[Communities] domain already registred as ' + domain);
+          console.log('[Communities] domain registred as ' + domain);
         });
-        
       }
       page.close();
     }
     
     if (definition.publisher) {
       const pluginPublisher = new Publisher(this.browserforce, this.org);
-      response.publisher = await pluginPublisher.retrieve(definition.publisher);
+      response['publisher'] = await pluginPublisher.retrieve(definition.publisher);
     }
     
     return response;
@@ -55,7 +55,6 @@ export default class Communities extends BrowserforcePlugin {
       if (plan.enabled === false) {
         console.log('Communities once enabled cannot be disabled once enabled');
       } else {
-        
         const page = await this.browserforce.openPage(PATHS.BASE, {
           waitUntil: ['load', 'domcontentloaded', 'networkidle0']
         });
@@ -66,23 +65,23 @@ export default class Communities extends BrowserforcePlugin {
         
         if (inputEnable) {
           await frameOrPage.click(SELECTORS.ENABLE_CHECKBOX);          
-          await frameOrPage.waitFor(SELECTORS.DOMAIN_NAME_INPUT_TEXT);
+          await frameOrPage.waitForSelector(SELECTORS.DOMAIN_NAME_INPUT_TEXT);
           await frameOrPage.type(SELECTORS.DOMAIN_NAME_INPUT_TEXT, plan.domainName);
           await frameOrPage.click(SELECTORS.DOMAIN_AVAILABILITY_BUTTON);
-          
-          await new Promise(resolve => {
-            setTimeout(async () => {
-              var domainTaken = await frameOrPage.$(SELECTORS.DOMAIN_REGISTRATION_ERROR);
-              resolve(domainTaken);
-            }, 500);
-          }).then(async resolvedValue => {
-            if (resolvedValue) {
+
+          const result = await this.raceSelectors(frameOrPage, [
+            SELECTORS.DOMAIN_REGISTRATION_ERROR,
+            SELECTORS.DOMAIN_AVAILABLE_MSG
+          ])
+   
+          switch (result) {
+            case SELECTORS.DOMAIN_REGISTRATION_ERROR:
               fs.writeFile('domain.txt', "failed", function (err) {
                 if (err) throw err;
               });
               await page.close();
-              throw new Error('Domain name registration failed for "' + plan.domainName + '"');
-            } else {
+              throw new Error('Domain name registration failed for "' + plan.domainName + '"');          
+            case SELECTORS.DOMAIN_AVAILABLE_MSG:
               console.log('[DEBUG] domain "' + plan.domainName + '" available');
               page.on('dialog', async dialog => {
                 await dialog.accept();
@@ -93,8 +92,8 @@ export default class Communities extends BrowserforcePlugin {
                 frameOrPage.click(SELECTORS.SAVE_BUTTON)
               ]);
               await page.close();
-            }
-          })
+              break;
+          }
         }
       }
     }
@@ -104,4 +103,16 @@ export default class Communities extends BrowserforcePlugin {
       await pluginPublisher.apply(plan.publisher);
     }
   }
+
+  raceSelectors = (page, selectors) => {
+    return Promise.race(
+      selectors.map(selector => {
+        return page
+          .waitForSelector(selector, {
+            visible: true,
+          })
+          .then(() => selector);
+      }),
+    );
+  };
 }
