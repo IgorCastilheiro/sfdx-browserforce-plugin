@@ -65,12 +65,9 @@ export default class Communities extends BrowserforcePlugin {
         const inputEnable = await frameOrPage.$(SELECTORS.ENABLE_CHECKBOX);
         
         if (inputEnable) {
-          await frameOrPage.click(SELECTORS.ENABLE_CHECKBOX);
-          
-          const domainName = (plan.domainName || this.browserforce.getMyDomain() || `comm-${Math.random().toString(36).substr(2)}`).substring(0, 22);
-          
+          await frameOrPage.click(SELECTORS.ENABLE_CHECKBOX);          
           await frameOrPage.waitFor(SELECTORS.DOMAIN_NAME_INPUT_TEXT);
-          await frameOrPage.type(SELECTORS.DOMAIN_NAME_INPUT_TEXT, domainName);
+          await frameOrPage.type(SELECTORS.DOMAIN_NAME_INPUT_TEXT, plan.domainName);
           await frameOrPage.click(SELECTORS.DOMAIN_AVAILABILITY_BUTTON);
           
           await new Promise(resolve => {
@@ -84,9 +81,9 @@ export default class Communities extends BrowserforcePlugin {
                 if (err) throw err;
               });
               await page.close();
-              throw new Error('Domain name registration failed for "' + domainName + '"');
+              throw new Error('Domain name registration failed for "' + plan.domainName + '"');
             } else {
-              console.log('[DEBUG] domain "' + domainName + '" available');
+              console.log('[DEBUG] domain "' + plan.domainName + '" available');
               page.on('dialog', async dialog => {
                 await dialog.accept();
               });
