@@ -80,7 +80,8 @@ export default class Communities extends BrowserforcePlugin {
                 if (err) throw err;
               });
               await page.close();
-              throw new Error('Domain name registration failed for "' + plan.domainName + '"');          
+              console.log('Domain name registration failed for "' + plan.domainName + '"');  
+              break;        
             case SELECTORS.DOMAIN_AVAILABLE_MSG:
               console.log('[DEBUG] domain "' + plan.domainName + '" available');
               page.on('dialog', async dialog => {
