@@ -108,8 +108,8 @@ export default class Publisher extends BrowserforcePlugin {
         statusButton.click(),
       ]);
       
-      workspacePage.close();
-      page.close();
+      await workspacePage.close();
+      await page.close();
     }
   }
 }

@@ -6,7 +6,7 @@
   "properties": {
     "communityNameAndStatus": {
       "title": "Community name and status",
-      "description": "Community name and status in a String representing a Json Object such as {\"communityName\":\"MyCommunity\",\"status\":\"Active\"} without spaces",
+      "description": "Community name and status in a String representing a Json Object such as {\"communityName\":\"MyCommunity\",\"status\":\"Active\"} without spaces, status must be 'Active' or 'Inactive' only",
       "type": "string"
     }
   }

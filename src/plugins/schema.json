@@ -7,6 +7,9 @@
   "properties": {
     "settings": {
       "properties": {
+        "activitySettings": {
+          "$ref": "./activity-settings/schema.json"
+        },
         "communities": {
           "$ref": "./communities/schema.json"
         },
@@ -16,6 +19,9 @@
         "customerPortal": {
           "$ref": "./customer-portal/schema.json"
         },
+        "densitySettings": {
+          "$ref": "./density-settings/schema.json"
+        },
         "devHub": {
           "$ref": "./devhub/schema.json"
         },
@@ -24,6 +30,9 @@
         },
         "lexEnabler": {
           "$ref": "./lex-enabler/schema.json"
+        },
+        "lightningExperienceSettings": {
+          "$ref": "./lightning-experience-settings/schema.json"
         },
         "salesforceToSalesforce": {
           "$ref": "./salesforce-to-salesforce/schema.json"
