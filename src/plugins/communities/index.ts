@@ -1,6 +1,7 @@
 import { BrowserforcePlugin } from '../../plugin';
 import * as fs from 'fs';
 import Publisher from './publisher';
+import { Page } from 'puppeteer';
 
 const PATHS = {
   BASE: '_ui/networks/setup/NetworkSettingsPage'
@@ -24,7 +25,7 @@ export default class Communities extends BrowserforcePlugin {
         waitUntil: ['load', 'domcontentloaded', 'networkidle0']
       });
       const frameOrPage = await this.browserforce.waitForInFrameOrPage(page, SELECTORS.BASE);
-      
+
       const inputEnable = await frameOrPage.$(SELECTORS.ENABLE_CHECKBOX);
       if (inputEnable) {
         response['enabled'] = await frameOrPage.$eval(SELECTORS.ENABLE_CHECKBOX, (el: HTMLInputElement) => el.checked);
@@ -41,15 +42,15 @@ export default class Communities extends BrowserforcePlugin {
       }
       page.close();
     }
-    
+
     if (definition.publisher) {
       const pluginPublisher = new Publisher(this.browserforce, this.org);
       response['publisher'] = await pluginPublisher.retrieve(definition.publisher);
     }
-    
+
     return response;
   }
-  
+
   public async apply(plan) {
     if (plan.enabled) {
       if (plan.enabled === false) {
@@ -58,13 +59,13 @@ export default class Communities extends BrowserforcePlugin {
         const page = await this.browserforce.openPage(PATHS.BASE, {
           waitUntil: ['load', 'domcontentloaded', 'networkidle0']
         });
-        
+
         const frameOrPage = await this.browserforce.waitForInFrameOrPage(page, SELECTORS.BASE);
-        
+
         const inputEnable = await frameOrPage.$(SELECTORS.ENABLE_CHECKBOX);
-        
+
         if (inputEnable) {
-          await frameOrPage.click(SELECTORS.ENABLE_CHECKBOX);          
+          await frameOrPage.click(SELECTORS.ENABLE_CHECKBOX);
           await frameOrPage.waitForSelector(SELECTORS.DOMAIN_NAME_INPUT_TEXT);
           await frameOrPage.type(SELECTORS.DOMAIN_NAME_INPUT_TEXT, plan.domainName);
           await frameOrPage.click(SELECTORS.DOMAIN_AVAILABILITY_BUTTON);
@@ -73,15 +74,15 @@ export default class Communities extends BrowserforcePlugin {
             SELECTORS.DOMAIN_REGISTRATION_ERROR,
             SELECTORS.DOMAIN_AVAILABLE_MSG
           ])
-   
+
           switch (result) {
             case SELECTORS.DOMAIN_REGISTRATION_ERROR:
               fs.writeFile('domain.txt', "failed", function (err) {
                 if (err) throw err;
               });
               await page.close();
-              console.log('Domain name registration failed for "' + plan.domainName + '"');  
-              break;        
+              console.log('Domain name registration failed for "' + plan.domainName + '"');
+              break;
             case SELECTORS.DOMAIN_AVAILABLE_MSG:
               console.log('[DEBUG] domain "' + plan.domainName + '" available');
               page.on('dialog', async dialog => {
@@ -98,14 +99,14 @@ export default class Communities extends BrowserforcePlugin {
         }
       }
     }
-    
+
     if (plan.publisher) {
       const pluginPublisher = new Publisher(this.browserforce, this.org);
       await pluginPublisher.apply(plan.publisher);
     }
   }
 
-  raceSelectors = (page, selectors) => {
+  raceSelectors = (page: Page, selectors: string[]) => {
     return Promise.race(
       selectors.map(selector => {
         return page
